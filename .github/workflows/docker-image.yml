@@ -8,15 +8,8 @@ on:
 
 jobs:
 
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
   build-and-push-image:
+    environment: docker_deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,8 +20,7 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.DOCKER_DEPLOY_USER }}
+          username: ${{ secrets.DOCKER_DEPLOY_USER }}
           password: ${{ secrets.DOCKER_DEPLOY_APIKEY }}
 
       - name: Extract metadata (tags, labels) for Docker
